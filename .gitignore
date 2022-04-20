@@ -1,5 +1,7 @@
 # darts
 data/*
+experiments/*
+!experiments/.done
 
 # vscode
 .history/*
