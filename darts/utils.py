@@ -1,5 +1,25 @@
 import os
+from typing import List, Tuple
 import torch
+import torch.nn as nn
+import numpy as np
+class AvgrageMeter(object):
+    """
+    Statistics collector
+    """
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.avg = 0
+        self.sum = 0
+        self.cnt = 0
+
+    def update(self, val: float, n: int=1):
+        self.sum += val * n
+        self.cnt += n
+        self.avg = self.sum / self.cnt
+
 
 def drop_path(x: torch.tensor, drop_prob: float, use_gpu: bool=True) -> torch.tensor:
     """
@@ -28,3 +48,24 @@ def count_parameters_in_MB(model: nn.Module) -> float:
     total_size /= 1e6
 
     return total_size
+
+def compute_accuracy(output: torch.Tensor, label: torch.Tensor, topk: Tuple=(1,)) -> List:
+    N = label.shape[0]
+    assert output.shape[0] == N
+
+    maxk = max(topk)
+    _, pred = output.topk(k=maxk, dim=1)
+    pred = pred.T
+    target = label.reshape(1, -1).expand_as(pred)
+    assert target.shape == (maxk, N)
+
+    correct = pred.eq(target)
+
+    ret = list()
+    for k in topk:
+        correct_k = correct[:k].reshape(-1).float().sum()
+        rate = correct_k * 100.0 / N
+        ret.append(rate)
+
+    return ret
+
