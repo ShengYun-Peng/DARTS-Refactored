@@ -3,7 +3,7 @@ import torch.nn as nn
 
 OPS = {
     "none":         lambda C, stride, affine: Zero(stride),
-    "avg_pool_3x3": lambda C, stride, affine: nn.AvgPool2d(kenrel_size=3, stride=stride, padding=1, count_include_pad=False),
+    "avg_pool_3x3": lambda C, stride, affine: nn.AvgPool2d(kernel_size=3, stride=stride, padding=1, count_include_pad=False),
     "max_pool_3x3": lambda C, stride, affine: nn.MaxPool2d(kernel_size=3, stride=stride, padding=1),
     "sep_conv_3x3": lambda C, stride, affine: SepConv(C, C, 3, stride, 1, affine=affine),
     "sep_conv_5x5": lambda C, stride, affine: SepConv(C, C, 5, stride, 2, affine=affine),
