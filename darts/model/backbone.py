@@ -5,7 +5,7 @@ from typing import Tuple
 import torch
 import torch.nn as nn
 
-from operations import *
+from darts.model.operations import *
 from darts.utils import drop_path
 from darts.genotype import DARTS
 
