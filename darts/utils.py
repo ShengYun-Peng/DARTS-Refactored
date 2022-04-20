@@ -16,3 +16,15 @@ def drop_path(x: torch.tensor, drop_prob: float, use_gpu: bool=True) -> torch.te
         x.mul_(mask)
     return x
 
+def load(model: nn.Module, model_path: str):
+    assert os.path.exists(model_path), model_path
+    model.load_state_dict(torch.load(model_path))
+
+def count_parameters_in_MB(model: nn.Module) -> float:
+    total_size = 0.
+    for name, params in model.named_parameters():
+        if "auxiliary" not in name:
+            total_size += np.prod(params.shape)
+    total_size /= 1e6
+
+    return total_size
