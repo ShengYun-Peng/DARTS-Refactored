@@ -5,6 +5,7 @@ import argparse
 import numpy as np
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
+from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision.datasets import CIFAR10
 
 class Cutout(object):
@@ -53,7 +54,7 @@ def transform_cifar10(args: argparse.Namespace) -> Tuple[transforms.Compose, tra
 
     return train_transform, valid_transform
 
-def prepare_cifar10(args: argparse.Namespace) -> DataLoader:
+def prepare_cifar10_test(args: argparse.Namespace) -> DataLoader:
     assert os.path.exists(args.data)
 
     _, test_transform = transform_cifar10(args)
@@ -61,3 +62,28 @@ def prepare_cifar10(args: argparse.Namespace) -> DataLoader:
     dataloader = DataLoader(dataset=dataset, batch_size=args.batch_size, shuffle=False, pin_memory=True, num_workers=8)
 
     return dataloader
+
+def prepare_cifar10_search(args: argparse.Namespace) -> Tuple[DataLoader, DataLoader]:
+    assert os.path.exists(args.data)
+
+    train_transform, _ = transform_cifar10(args)
+    dataset = CIFAR10(root=args.data, train=True, download=True, transform=train_transform)
+
+    num_total = len(dataset)
+    num_split = int(np.floor(args.train_portion * num_total))
+    indices = list(range(num_total))
+
+    # TODO: Shall we shuffle the indices?
+
+    split = dict(
+        train=indices[:num_split],
+        val=indices[num_split:]
+    )
+
+    sampler_train = SubsetRandomSampler(split["train"])
+    sampler_val = SubsetRandomSampler(split["val"])
+    dataloader_train = DataLoader(dataset, args.batch_size, sampler=sampler_train, pin_memory=True, num_workers=8)
+    dataloader_val = DataLoader(dataset, args.batch_size, sampler=sampler_val, pin_memory=True, num_workers=8)
+
+    return dataloader_train, dataloader_val
+
