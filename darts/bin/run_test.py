@@ -17,7 +17,7 @@ from typing import Tuple
 import darts.genotype as genotypes
 from darts.model.model import NetworkCIFAR as Network
 import darts.utils as utils
-from darts.dataset.cifar10 import prepare_cifar10
+from darts.dataset.cifar10 import prepare_cifar10_test
 
 log_format = '%(asctime)s %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
@@ -27,19 +27,19 @@ CIFAR_CLASSES = 10
 
 def cli() -> ArgumentParser:
     parser = ArgumentParser()
-    parser.add_argument('--data', type=str, default="data", help='location of the data corpus')
-    parser.add_argument('--batch_size', type=int, default=96, help='batch size')
-    parser.add_argument('--report_freq', type=float, default=20, help='report frequency')
-    parser.add_argument('--gpu', type=int, default=0, help='gpu device id')
-    parser.add_argument('--init_channels', type=int, default=36, help='num of init channels')
-    parser.add_argument('--layers', type=int, default=20, help='total number of layers')
-    parser.add_argument('--model_path', type=str, default="weights/cifar10_model.pt", help='path of pretrained model')
-    parser.add_argument('--auxiliary', action='store_true', default=False, help='use auxiliary tower')
-    parser.add_argument('--cutout', action='store_true', default=False, help='use cutout')
-    parser.add_argument('--cutout_length', type=int, default=16, help='cutout length')
-    parser.add_argument('--drop_path_prob', type=float, default=0.2, help='drop path probability')
-    parser.add_argument('--seed', type=int, default=0, help='random seed')
-    parser.add_argument('--arch', type=str, default='DARTS', help='which architecture to use')
+    parser.add_argument("--data", type=str, default="data", help="location of the data corpus")
+    parser.add_argument("--batch_size", type=int, default=96, help="batch size")
+    parser.add_argument("--report_freq", type=float, default=20, help="report frequency")
+    parser.add_argument("--gpu", type=int, default=0, help="gpu device id")
+    parser.add_argument("--init_channels", type=int, default=36, help="num of init channels")
+    parser.add_argument("--layers", type=int, default=20, help="total number of layers")
+    parser.add_argument("--model_path", type=str, default="weights/cifar10_model.pt", help="path of pretrained model")
+    parser.add_argument("--auxiliary", action="store_true", default=False, help="use auxiliary tower")
+    parser.add_argument("--cutout", action="store_true", default=False, help="use cutout")
+    parser.add_argument("--cutout_length", type=int, default=16, help="cutout length")
+    parser.add_argument("--drop_path_prob", type=float, default=0.2, help="drop path probability")
+    parser.add_argument("--seed", type=int, default=0, help="random seed")
+    parser.add_argument("--arch", type=str, default="DARTS", help="which architecture to use")
 
     return parser
 
@@ -101,7 +101,7 @@ def main():
     # dataset
     if not os.path.exists(args.data):
         os.mkdir(args.data)
-    test_dataloader = prepare_cifar10(args)
+    test_dataloader = prepare_cifar10_test(args)
 
     test_acc, _ = inference(test_dataloader, model, criterion, args)
     logging.info("\n%s\n %s test_acc %f \n%s", "=" * 65, " " * 20, test_acc, "=" * 65)
