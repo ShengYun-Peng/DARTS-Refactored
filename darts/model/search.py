@@ -148,8 +148,8 @@ class Network(nn.Module):
         self.alphas_normal = 1e-3 * torch.randn(K, N)
         self.alphas_reduce = 1e-3 * torch.randn(K, N)
 
-        self.alphas_normal = self.alphas_normal.requires_grad_().cuda()
-        self.alphas_reduce = self.alphas_reduce.requires_grad_().cuda()
+        self.alphas_normal = torch.tensor(self.alphas_normal, requires_grad=True, device="cuda")
+        self.alphas_reduce = torch.tensor(self.alphas_reduce, requires_grad=True, device="cuda")
 
         self._arch_parameters = list([
             self.alphas_normal,
