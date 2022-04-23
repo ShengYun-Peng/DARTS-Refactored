@@ -99,10 +99,9 @@ def main():
     criterion = nn.CrossEntropyLoss().cuda()
 
     # dataset
-    if not os.path.exists(args.data):
-        os.mkdir(args.data)
     test_dataloader = prepare_cifar10_test(args)
 
+    # inference
     test_acc, _ = inference(test_dataloader, model, criterion, args)
     logging.info("\n%s\n %s test_acc %f \n%s", "=" * 65, " " * 20, test_acc, "=" * 65)
 
