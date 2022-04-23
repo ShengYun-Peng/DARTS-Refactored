@@ -1,5 +1,6 @@
 # darts
 data/*
+!data/.done
 experiments/*
 !experiments/.done
 
