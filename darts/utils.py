@@ -69,3 +69,6 @@ def compute_accuracy(output: torch.Tensor, label: torch.Tensor, topk: Tuple=(1,)
 
     return ret
 
+def save(model: nn.Module, model_path: str):
+    torch.save(model.state_dict(), model_path)
+
