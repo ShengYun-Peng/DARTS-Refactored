@@ -87,3 +87,14 @@ def prepare_cifar10_search(args: argparse.Namespace) -> Tuple[DataLoader, DataLo
 
     return dataloader_train, dataloader_val
 
+def prepare_cifar10_train(args: argparse.Namespace) -> Tuple[DataLoader, DataLoader]:
+    # the official code uses test set as validation in training
+    train_transform, test_transform = transform_cifar10(args)
+    train_dataset = CIFAR10(root=args.data, train=True, download=True, transform=train_transform)
+    test_dataset = CIFAR10(root=args.data, train=False, download=True, transform=test_transform)
+
+    dataloader_train = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True, num_workers=8)
+    dataloader_test = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False, pin_memory=True, num_workers=8)
+
+    return dataloader_train, dataloader_test
+
