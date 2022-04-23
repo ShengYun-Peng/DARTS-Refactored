@@ -40,7 +40,7 @@ def cli() -> ArgumentParser:
     parser.add_argument('--cutout', action='store_true', default=False, help='use cutout')
     parser.add_argument('--cutout_length', type=int, default=16, help='cutout length')
     parser.add_argument('--drop_path_prob', type=float, default=0.3, help='drop path probability')
-    parser.add_argument('--save', type=str, default="EXP", help='experiment name')
+    parser.add_argument('--save', type=str, default="SEARCH", help='experiment name')
     parser.add_argument('--seed', type=int, default=2, help='random seed')
     parser.add_argument('--grad_clip', type=float, default=5, help='gradient clipping')
     parser.add_argument('--train_portion', type=float, default=0.5, help='portion of training data')
@@ -138,13 +138,13 @@ def main():
         os.mkdir(args.save)
     log_format = '%(asctime)s %(message)s'
     logging.basicConfig(stream=sys.stdout, level=logging.INFO,
-        format=log_format, datefmt='%m/%d %I:%M:%S %p')
-    fh = logging.FileHandler(os.path.join(args.save, 'log.txt'))
+        format=log_format, datefmt="%m/%d %I:%M:%S %p")
+    fh = logging.FileHandler(os.path.join(args.save, "log.txt"))
     fh.setFormatter(logging.Formatter(log_format))
     logging.getLogger().addHandler(fh)
 
     if not torch.cuda.is_available():
-        logging.info('no gpu device available')
+        logging.info("no gpu device available")
         sys.exit(1)
 
     cudnn.benchmark = True
@@ -155,7 +155,7 @@ def main():
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed(args.seed)
-    logging.info('gpu device = %d' % args.gpu)
+    logging.info("gpu device = %d" % args.gpu)
     logging.info("args = %s", args)
 
     # model
