@@ -165,7 +165,7 @@ class Network(nn.Module):
         """
         model_new = Network(self._C, self._num_classes, self._layers, self._criterion)
         model_new = model_new.cuda()
-        for new_params, old_params in zip(model_new.arch_parameters, self.arch_parameters):
+        for new_params, old_params in zip(model_new.arch_parameters(), self.arch_parameters()):
             new_params.data.copy_(old_params.data)
 
         return model_new
